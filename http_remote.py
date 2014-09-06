@@ -1,8 +1,7 @@
 import string
 import random
-import urllib
-import urllib2
 import json
+import requests
 
 # Default port that Spotify Web Helper binds to.
 PORT = 4371
@@ -40,10 +39,8 @@ class SpotifyCLI(object):
             'Origin': 'https://open.spotify.com'
         })
 
-        url += "?" + urllib.urlencode(params)
-
-        request = urllib2.Request(url, headers=headers)
-        return json.loads(urllib2.urlopen(request).read())
+        request = requests.get(url, params=params, headers=headers)
+        return request.json()
 
     def get_version(self):
         return self.get('/service/version.json', {'service': 'remote'})
