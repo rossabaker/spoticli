@@ -16,15 +16,8 @@ class SpotifyCLI(object):
             ''.join(random.choice(string.ascii_lowercase) for x in range(10))
         )
 
-        self.oauth_token = self.get_oauth_token()
-        self.csrf_token = self.get_csrf_token()
-
-    def get_oauth_token(self):
-        return self.get('http://open.spotify.com/token')['t']
-
-    def get_csrf_token(self):
-        ret = self.get('/simplecsrf/token.json')
-        return ret['token']
+        self.oauth_token = self.get('http://open.spotify.com/token')['t']
+        self.csrf_token = self.get('/simplecsrf/token.json')['token']
 
     def get(self, url, params={}, headers={}):
         if url.startswith('/'):
