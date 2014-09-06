@@ -52,8 +52,7 @@ class SpotifyCLI(object):
         return self.get('/remote/status.json')
 
     def pause(self, pause=True):
-        pause = 'true' if pause else 'false'
-        self.get('/remote/pause.json', {'pause': pause})
+        self.get('/remote/pause.json', {'pause': json.dumps(pause)})
 
     def unpause(self):
         self.pause(pause=False)
