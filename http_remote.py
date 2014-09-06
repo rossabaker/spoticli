@@ -42,13 +42,13 @@ class SpotifyCLI(object):
         return self.get('/remote/status.json')
 
     def pause(self, pause=True):
-        self.get('/remote/pause.json', {'pause': json.dumps(pause)})
+        return self.get('/remote/pause.json', {'pause': json.dumps(pause)})
 
     def unpause(self):
-        self.pause(pause=False)
+        return self.pause(pause=False)
 
     def play(self, spotify_uri):
-        self.get('/remote/play.json', {
+        return self.get('/remote/play.json', {
             'uri': spotify_uri,
             'context': spotify_uri
         })
