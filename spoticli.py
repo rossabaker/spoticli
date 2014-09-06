@@ -35,9 +35,6 @@ class SpotifyCLI(object):
         request = requests.get(url, params=params, headers=headers)
         return request.json()
 
-    def get_version(self):
-        return self.get('/service/version.json', {'service': 'remote'})
-
     def get_status(self):
         return self.get('/remote/status.json')
 
