@@ -4,11 +4,9 @@ import random
 import urllib
 import urllib2
 import json
-import time
 
 # Default port that Spotify Web Helper binds to.
 PORT = 4371
-DEFAULT_RETURN_ON = ['login', 'logout', 'play', 'pause', 'error', 'ap']
 ORIGIN_HEADER = {'Origin': 'https://open.spotify.com'}
 
 
@@ -55,12 +53,10 @@ class SpotifyCLI(object):
             headers=ORIGIN_HEADER
         )
 
-    def get_status(self, return_after=59, return_on=DEFAULT_RETURN_ON):
+    def get_status(self):
         params = {
             'oauth': self.oauth_token,
             'csrf': self.csrf_token,
-            'returnafter': return_after,
-            'returnon': ','.join(return_on)
         }
         return self.get_json(
             '/remote/status.json',
@@ -100,11 +96,5 @@ if __name__ == '__main__':
     spotify = SpotifyCLI()
     spotify.setup()
 
-    # print "Playing album.."
-    # play('spotify:album:6eWtdQm0hSlTgpkbw4LaBG')
-    # time.sleep(5)
-    print("Pausing song..")
-    spotify.pause()
-    time.sleep(2)
-    print("Unpausing song..")
-    spotify.unpause()
+    import pprint
+    pprint.pprint(spotify.get_status())
