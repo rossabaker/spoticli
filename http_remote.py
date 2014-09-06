@@ -31,13 +31,13 @@ class SpotifyCLI(object):
         self.csrf_token = self.get_csrf_token()
 
     def get_oauth_token(self):
-        return self.get_json('http://open.spotify.com/token')['t']
+        return self.get('http://open.spotify.com/token')['t']
 
     def get_csrf_token(self):
-        ret = self.get_json('/simplecsrf/token.json')
+        ret = self.get('/simplecsrf/token.json')
         return ret['token']
 
-    def get_json(self, url, params={}, headers={}):
+    def get(self, url, params={}, headers={}):
         if url.startswith('/'):
             url = "https://%s:%d%s" % (self.domain, PORT, url)
 
@@ -56,20 +56,20 @@ class SpotifyCLI(object):
         return json.loads(urllib2.urlopen(request).read())
 
     def get_version(self):
-        return self.get_json('/service/version.json', {'service': 'remote'})
+        return self.get('/service/version.json', {'service': 'remote'})
 
     def get_status(self):
-        return self.get_json('/remote/status.json')
+        return self.get('/remote/status.json')
 
     def pause(self, pause=True):
         pause = 'true' if pause else 'false'
-        self.get_json('/remote/pause.json', {'pause': pause})
+        self.get('/remote/pause.json', {'pause': pause})
 
     def unpause(self):
         self.pause(pause=False)
 
     def play(self, spotify_uri):
-        self.get_json('/remote/play.json', {
+        self.get('/remote/play.json', {
             'uri': spotify_uri,
             'context': spotify_uri
         })
