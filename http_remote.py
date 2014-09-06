@@ -1,4 +1,3 @@
-import ssl
 import string
 import random
 import urllib
@@ -7,15 +6,6 @@ import json
 
 # Default port that Spotify Web Helper binds to.
 PORT = 4371
-
-
-# I had some troubles with the version of Spotify's SSL cert and Python 2.7 on
-# Mac.  Did this monkey dirty patch to fix it. Your milage may vary.
-def new_wrap_socket(*args, **kwargs):
-    kwargs['ssl_version'] = ssl.PROTOCOL_SSLv3
-    return orig_wrap_socket(*args, **kwargs)
-
-orig_wrap_socket, ssl.wrap_socket = ssl.wrap_socket, new_wrap_socket
 
 
 class SpotifyCLI(object):
