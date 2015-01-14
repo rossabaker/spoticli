@@ -8,7 +8,6 @@ import ssl
 # Default port that Spotify Web Helper binds to.
 PORT = 4371
 
-
 class SpotifyCLI(object):
     oauth_token = None
     csrf_token = None
