@@ -2,6 +2,8 @@ import string
 import random
 import json
 import requests
+import re
+import ssl
 
 # Default port that Spotify Web Helper binds to.
 PORT = 4371
@@ -15,25 +17,42 @@ class SpotifyCLI(object):
         self.domain = '{0}.spotilocal.com'.format(
             ''.join(random.choice(string.ascii_lowercase) for x in range(10))
         )
-
-        self.oauth_token = self.get('http://open.spotify.com/token')['t']
+        #changed url endpoints
+        self.oauth_token = self.get('https://embed.spotify.com/remote-control-bridge/')
         self.csrf_token = self.get('/simplecsrf/token.json')['token']
 
     def get(self, url, params={}, headers={}):
+        response = ""
+        isCSRF = False
+        
         if url.startswith('/'):
             url = "https://%s:%d%s" % (self.domain, PORT, url)
+            isCSRF = True
 
         # Always add the default parameters and headers
         params.update({
             'oauth': self.oauth_token,
             'csrf': self.csrf_token,
         })
+        #headers also needed to be changed
         headers.update({
-            'Origin': 'https://open.spotify.com'
+            'Referer':'https://embed.spotify.com/remote-control-bridge/',
+            'Origin': 'https://embed.spotify.com/'
         })
-
-        request = requests.get(url, params=params, headers=headers)
-        return request.json()
+        #SSL verification is currently set to false because Im currently unable to figure out why its refusing the certificate
+        request = requests.get(url, params=params, headers=headers, verify= False)
+        
+        if isCSRF:
+            response = request.json()
+            
+        if not isCSRF:
+            data = request.text
+            search = re.compile('(?<=a = \')(.*)(?=\';)')
+            parsed = search.findall(data)
+            response = parsed[0]
+            
+        return response  
+        
 
     def get_status(self):
         return self.get('/remote/status.json')
@@ -54,5 +73,4 @@ if __name__ == '__main__':
     spotify = SpotifyCLI()
     spotify.setup()
 
-    import pprint
-    pprint.pprint(spotify.get_status())
+    spotify.play('spotify:track:3wx2kQWPn9p5UppQbNhPAk')
