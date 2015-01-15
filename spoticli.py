@@ -43,8 +43,7 @@ class SpotifyCLI(object):
         
         if isCSRF:
             response = request.json()
-            
-        if not isCSRF:
+        else:
             data = request.text
             search = re.compile('(?<=a = \')(.*)(?=\';)')
             parsed = search.findall(data)
@@ -72,4 +71,4 @@ if __name__ == '__main__':
     spotify = SpotifyCLI()
     spotify.setup()
 
-    spotify.play('spotify:track:3wx2kQWPn9p5UppQbNhPAk')
+    #spotify.play("spotify_uri")
