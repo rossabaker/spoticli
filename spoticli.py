@@ -4,6 +4,8 @@ import json
 import requests
 import re
 import ssl
+import sys, getopt
+
 
 # Default port that Spotify Web Helper binds to.
 PORT = 4371
@@ -38,8 +40,9 @@ class SpotifyCLI(object):
             'Referer':'https://embed.spotify.com/remote-control-bridge/',
             'Origin': 'https://embed.spotify.com/'
         })
+        
         #SSL verification is currently set to false because Im currently unable to figure out why its refusing the certificate
-        request = requests.get(url, params=params, headers=headers, verify= False)
+        request = requests.get(url, params=params, headers=headers, verify=False)
         
         if isCSRF:
             response = request.json()
@@ -67,8 +70,27 @@ class SpotifyCLI(object):
             'context': spotify_uri
         })
 
+def main(argv):
+    try:
+        opts, args = getopt.getopt(argv, "", ["play=","pause","unpause","skip_forward","skip_back"])
+    except getopt.GetoptError:
+        print "Usage: spoticli.py --play=<uri>|--pause|--unpause|--skip_forward|--skip_back"
+        sys.exit(2)
+    for opt, arg in opts:
+        print opt
+        if opt == "--play":
+            spotify.play(arg)
+        elif opt == "--pause":
+            spotify.pause()
+        elif opt == "--unpause":
+            spotify.unpause()
+        elif opt == "--skip_forward":
+            print "Haven't implemented yet"
+        elif opt == "--skip_back":
+            print "Haven't implemented yet"
+
 if __name__ == '__main__':
     spotify = SpotifyCLI()
     spotify.setup()
-
-    #spotify.play("spotify_uri")
+    main(sys.argv[1:])
+    
