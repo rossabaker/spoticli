@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import string
 import random
 import json
@@ -72,12 +74,11 @@ class SpotifyCLI(object):
 
 def main(argv):
     try:
-        opts, args = getopt.getopt(argv, "", ["play=","pause","unpause","skip_forward","skip_back"])
+        opts, args = getopt.getopt(argv, "", ["play=","pause","unpause","skip_forward","skip_back","status"])
     except getopt.GetoptError:
-        print "Usage: spoticli.py --play=<uri>|--pause|--unpause|--skip_forward|--skip_back"
+        print "Usage: spoticli.py --play=<uri>|--pause|--unpause|--skip_forward|--skip_back|--status"
         sys.exit(2)
     for opt, arg in opts:
-        print opt
         if opt == "--play":
             spotify.play(arg)
         elif opt == "--pause":
@@ -88,6 +89,8 @@ def main(argv):
             print "Haven't implemented yet"
         elif opt == "--skip_back":
             print "Haven't implemented yet"
+        elif opt == "--status":
+            print json.dumps(spotify.get_status())
 
 if __name__ == '__main__':
     spotify = SpotifyCLI()
